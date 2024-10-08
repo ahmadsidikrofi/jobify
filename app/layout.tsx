@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Urbanist } from 'next/font/google'
+import { ClerkProvider } from "@clerk/nextjs"
 import "./globals.css";
+import Providers from "./providers";
 
 const quicksand = Urbanist({  subsets: ['latin']})
 
@@ -16,11 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${quicksand.className}`}
-      >
-        {children}
-      </body>
+      <ClerkProvider>
+        <body className={`${quicksand.className}`}>
+          <Providers>{children}</Providers>
+        </body>
+      </ClerkProvider>
     </html>
   );
 }
