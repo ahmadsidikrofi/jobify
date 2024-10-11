@@ -14,7 +14,7 @@ const Sidebar = () => {
             <div className="flex flex-col mt-20 gap-y-4">
                 {links.map((link) => (
                     <Button key={link.href} asChild variant={pathname === link.href ? 'default' : 'link'} className="flex items-center gap-2">
-                        <Link className="capitalized" href={link.href}>{link.icon} {link.label}</Link>
+                        <Link className="capitalize" href={link.href}>{link.icon} {link.label}</Link>
                     </Button>
                 ))}
             </div>

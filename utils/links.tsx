@@ -1,4 +1,4 @@
-import { Layers } from "lucide-react"
+import { Layers, LayoutDashboard, ChartBarBig } from "lucide-react"
 type NavLink = {
     href: string,
     label: string,
@@ -7,8 +7,8 @@ type NavLink = {
 
 const links: NavLink[] = [
     { href: '/add-job', label: 'add job', icon: <Layers /> },
-    { href: '/jobs', label: 'jobs', icon: <Layers /> },
-    { href: '/status', label: 'status', icon: <Layers /> },
+    { href: '/jobs', label: 'jobs', icon: <LayoutDashboard /> },
+    { href: '/status', label: 'status', icon: <ChartBarBig /> },
 ]
 
 export default links

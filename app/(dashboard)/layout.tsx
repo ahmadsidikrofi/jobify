@@ -3,8 +3,6 @@ import Sidebar from "@/components/Sidebar"
 import { PropsWithChildren } from "react"
 
 const Layout = ({ children }: PropsWithChildren) => {
-    const angka = 12
-    console.log(angka)
     return (
         <main className="grid lg:grid-cols-5">
             {/* first-col hidden ketika ukuran layar mengecil */}
