@@ -17,8 +17,8 @@ export default function Home() {
             Quam doloribus assumenda molestiae! Nihil, accusamus laborum minus maxime eaque 
             sapiente explicabo dolorum saepe?
           </p>
-          <Button className="mt-4" size="lg">
-            <Link href={"/add-job"}>Get Job Started</Link>
+          <Button className="mt-4 btn" size="lg">
+            <Link href={"/add-job"} className="capitalize">lets apply some</Link>
           </Button>
         </div>
         <div className="max-sm:mx-auto">

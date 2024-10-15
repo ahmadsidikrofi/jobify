@@ -5,58 +5,75 @@ import { CreateAndUpdateJobSchema, CreateAndUpdateJobType, JobMode, JobStatus } 
 import { CustomFormField, CustomFormSelect } from "./FormComponents";
 import { useForm } from "react-hook-form";
 import { Button } from "./ui/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { createJobAction } from "@/utils/actions";
 import { ReloadIcon } from "@radix-ui/react-icons"
+import { EditJobAction, GetSingleJobAction } from "@/utils/actions";
+import { useEffect } from "react";
 
-function CreateJobForm () {
+const EditJobForm = ({ jobId }: { jobId: string }) => {
+    const router = useRouter()
+    const { toast } = useToast()
+    const queryClient = useQueryClient()
+
+    const { data } = useQuery({
+        queryKey: ['job', jobId],
+        queryFn: () => GetSingleJobAction(jobId)
+    })
+    
     const form = useForm<CreateAndUpdateJobType>({
         resolver: zodResolver(CreateAndUpdateJobSchema),
         defaultValues: {
-            position: '',
-            company: '',
-            location: '',
-            status: JobStatus.Pending,
-            mode: JobMode.FullTime
+            position: data?.position || '',
+            company: data?.company || '',
+            location: data?.location || '',
+            mode: data?.mode as JobMode || JobMode.FullTime,
+            status: data?.status as JobStatus || JobStatus.Pending
         }
     })
-    const queryClient = useQueryClient()
-    const { toast } = useToast()
-    const router = useRouter()
+
+    useEffect(() => {
+        if (data) {
+            form.reset({
+                position: data.position,
+                company: data.company,
+                location: data.location,
+                mode: data.mode as JobMode,
+                status: data.status as JobStatus
+            })
+        }
+    }, [data, form])
+
     const { mutate, isPending } = useMutation({
-        mutationFn: (values: CreateAndUpdateJobType) => createJobAction(values),
+        mutationFn: (values: CreateAndUpdateJobType) => EditJobAction(jobId, values),
         onSuccess: (data) => {
             if (!data) {
                 toast({
                     variant: "destructive",
                     title: "Uh oh! Something went wrong.",
-                    description: "There was a problem with your new job.",
+                    description: "There was a problem with your current job.",
                 })
-                return;
+                return
             }
-            toast({
-                title: "Success make a job.",
-                description: "Go get a new job.",
-            })
             queryClient.invalidateQueries({ queryKey: ['jobs'] })
             queryClient.invalidateQueries({ queryKey: ['stats'] })
             queryClient.invalidateQueries({ queryKey: ['charts'] })
-            // form.reset()
+            toast({
+                title: "Sucess updating job.",
+                description: "Your job may success updated. Hope you got your employee as like you dream",
+            })
             router.push('/jobs')
-        },
-        onError: (error) => {
-            console.error('Error creating job:', error);
         }
     })
-    function onSubmit(values: CreateAndUpdateJobType) {
+
+    const onSubmit = (values: CreateAndUpdateJobType) => {
         mutate(values)
     }
     return ( 
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="bg-muted p-8 rounded-lg">
-                <h1 className="capitalize text-5xl mb-6 font-semibold">form a new job</h1>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="bg-muted p-8 rounded-lg shadow-component">
+                <h1 className="capitalize text-5xl mb-6 font-semibold">edit this job</h1>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 items-center">
                     {/* Position Field */}
                     <CustomFormField name="position" control={form.control} />
@@ -80,12 +97,12 @@ function CreateJobForm () {
                     />
                     <Button disabled={isPending} type='submit' className="capitalize mt-8 btn">{isPending ?
                         <><ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> <span>Please wait</span></>
-                        : 'create job'}
+                        : 'edit job'}
                     </Button>
                 </div>
             </form>
         </Form>
-     );
+    );
 }
  
-export default CreateJobForm;
+export default EditJobForm;

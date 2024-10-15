@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 const Sidebar = () => {
     const pathname = usePathname()
     return ( 
-        <main className="py-8 px-8 bg-muted h-full">
+        <main className="py-8 px-8 bg-muted h-[95%] shadow-component mx-4 mt-3 mb-10 rounded-xl">
             <Image alt="logo" src={Logo}/>
             <div className="flex flex-col mt-20 gap-y-4">
                 {links.map((link) => (

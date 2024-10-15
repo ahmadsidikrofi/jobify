@@ -28,7 +28,7 @@ export function CustomFormField({ name, control }: CustomFormFieldProps) {
                 <FormItem>
                     <FormLabel className="capitalize">{name}</FormLabel>
                     <FormControl>
-                        <Input {...field} />
+                        <Input {...field} className="btn" />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
@@ -41,7 +41,8 @@ type CustomFormSelectProps = {
     name: string,
     control: Control<any>,
     items: string[],
-    labelText?: string
+    labelText?: string,
+    defaultValue?: string
 }
 export function CustomFormSelect({ name, control, items, labelText }: CustomFormSelectProps) {
     return (
@@ -56,12 +57,12 @@ export function CustomFormSelect({ name, control, items, labelText }: CustomForm
                             onValueChange={field.onChange}
                             defaultValue={field.value}
                         >
-                            <SelectTrigger>
+                            <SelectTrigger className="btn capitalize">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
                                 {items.map((item) => (
-                                    <SelectItem className="text-md" key={item} value={item}>{item}</SelectItem>
+                                    <SelectItem className="text-md capitalize" key={item} value={item}>{item}</SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>

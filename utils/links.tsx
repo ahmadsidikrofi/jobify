@@ -8,7 +8,7 @@ type NavLink = {
 const links: NavLink[] = [
     { href: '/add-job', label: 'add job', icon: <Layers /> },
     { href: '/jobs', label: 'jobs', icon: <LayoutDashboard /> },
-    { href: '/status', label: 'status', icon: <ChartBarBig /> },
+    { href: '/stats', label: 'stats', icon: <ChartBarBig /> },
 ]
 
 export default links
