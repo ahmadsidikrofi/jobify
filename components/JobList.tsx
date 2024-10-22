@@ -4,6 +4,7 @@ import JobCard from './JobCard';
 import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { GetAllJobsAction } from '@/utils/actions';
+import JobCardSkeleton from './JobCardSkeleton';
 
 const JobList = () => {
     const searchParams = useSearchParams()
@@ -21,7 +22,12 @@ const JobList = () => {
     })
 
     const jobs = data?.jobs || []
-    if (isPending) return <h2 className='text-4xl'>Load jobs...</h2>
+    if (isPending) return (
+        <div className='grid sm:grid-cols-2 gap-8'>
+            <JobCardSkeleton />
+            <JobCardSkeleton />
+        </div>
+    )
     if (jobs.length < 1) return <h2 className='text-4xl'>No job found</h2>
     return ( 
         <main className='grid sm:grid-cols-2 gap-8'>

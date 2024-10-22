@@ -37,12 +37,12 @@ type GetAllJobsActionTypes = {
 }
 
 export async function GetAllJobsAction({
-  search, jobStatus, page = 1, limit = 10
+  search, jobStatus, page=1, limit=10
 }: GetAllJobsActionTypes): Promise<{
   jobs: JobType[],
   count: number,
   page: number,
-  totalPage: number
+  totalPages: number
 }> {
   const userId = AuthenticateAndRedirect()
   try {
@@ -73,14 +73,21 @@ export async function GetAllJobsAction({
         status: jobStatus
       }
     }
+    const skip = (page - 1) * limit
     const jobs: JobType[] = await prisma.job.findMany({
       where: searchParams,
+      skip,
+      take: limit,
       orderBy: { createdAt: 'desc' }
     })
-    return { jobs, count: 0, page: 1, totalPage: 0 }
+    const count = await prisma.job.count({
+      where: searchParams
+    })
+    const totalPages = Math.ceil(count / limit)
+    return { jobs, count: 0, page, totalPages }
   } catch (err) {
-    console.error("Error muncu: ", err)
-    return { jobs: [], count: 0, page: 1, totalPage: 0 }
+    console.error("Error muncul: ", err)
+    return { jobs: [], count: 0, page: 1, totalPages: 0 }
   }
 }
 
@@ -138,6 +145,7 @@ export async function CountStatsAction(): Promise<{
   interview: number,
   decline: number
 }> {
+  // await new Promise((resolve) => setTimeout(resolve, 3000))
   const userId = AuthenticateAndRedirect()
   try {
     const countStats = await prisma.job.groupBy({
